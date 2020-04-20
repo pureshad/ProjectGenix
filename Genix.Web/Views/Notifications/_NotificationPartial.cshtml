@@ -1,0 +1,45 @@
+﻿@{
+    var show = false;
+    var _notificationSuccess = string.Empty;
+    var _notificationError = string.Empty;
+
+
+    if (ViewData.ContainsKey(nameof(NotificationType.RegisterSuccess)))
+    {
+        _notificationSuccess = ViewData[nameof(NotificationType.RegisterSuccess)] as string;
+    }
+
+    if (ViewData.ContainsKey(nameof(NotificationType.RegisterError)))
+    {
+        _notificationError = ViewData[nameof(NotificationType.RegisterError)] as string;
+    }
+
+    //if (ViewData.ContainsKey("LoginSuccess"))
+    //{
+    //    _notification = ViewData["LoginSuccess"] as string;
+    //}
+
+    if (ViewData.ContainsKey(nameof(NotificationType.LoginError)))
+    {
+        _notificationError = ViewData[nameof(NotificationType.LoginError)] as string;
+    }
+    show = !string.IsNullOrWhiteSpace(_notificationSuccess);
+}
+
+
+<div @(Html.Raw(show ? "" : "style=\"display:none;\""))>
+    @if (show)
+    {
+
+        <div class="alert-success">
+            @(_notificationSuccess)
+        </div>
+    }
+    else
+    {
+        <div class="alert-danger">
+            @(_notificationError)
+        </div>
+    }
+
+</div>  

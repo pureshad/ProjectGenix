@@ -1,4 +1,5 @@
 ﻿using Genix.Core.Domain.Customers;
+using Genix.Core.Domain.Notification;
 using Genix.Data.Infrastructure;
 using Genix.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace Genix.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         //private readonly ILogger<HomeController> _logger;
         private readonly IRepository<Customer> _customerRepository;
@@ -24,8 +25,9 @@ namespace Genix.Web.Controllers
         public IActionResult Index()
         {
             //var users = _customerRepository.Table.ToList();
-            var users = _customerRoleRepository.Table.ToList();
-            return Json(users);
+            //var users = _customerRoleRepository.Table.ToList();
+            //AddNotification(NotificationType.LoginSuccess, "Redirected to home");
+            return View();
         }
 
         //[HttpPost]
