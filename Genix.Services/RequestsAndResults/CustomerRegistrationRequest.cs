@@ -4,14 +4,14 @@ namespace Genix.Services.RequestsAndResults
 {
     public class CustomerRegistrationRequest
     {
-        public CustomerRegistrationRequest(Customer customer, string email, string userName, string password, PasswordFormat passwordFormat, bool isAproved)
+        public CustomerRegistrationRequest(Customer customer, string email, string userName, string password, PasswordFormat passwordFormat, bool isAproved = true)
         {
             Customer = customer;
             Email = email;
             UserName = userName;
             Password = password;
             PasswordFormat = passwordFormat;
-            IsAproved = isAproved;
+            IsAproved = true; //TODO change logic
         }
 
         public Customer Customer { get; }
@@ -19,6 +19,6 @@ namespace Genix.Services.RequestsAndResults
         public string UserName { get; }
         public string Password { get; }
         public PasswordFormat PasswordFormat { get; }
-        public bool IsAproved { get; } = true;
+        public bool IsAproved { get; }
     }
 }
