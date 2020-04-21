@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Genix.Core.Domain.Customers;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Genix.Web.Models.Customers
@@ -23,6 +24,8 @@ namespace Genix.Web.Models.Customers
 
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
+        public Customer Customer { get; set; }
 
     }
 }

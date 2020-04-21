@@ -2,6 +2,7 @@
 using Genix.Data.Infrastructure;
 using Genix.Services.Infrastructure;
 using Genix.Services.Infrastructure.Customers;
+using Genix.Services.RequestsAndResults;
 using Genix.Web.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,45 +34,29 @@ namespace Genix.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterModel customer)
+        public IActionResult Register(RegisterModel model)
         {
-            var message = string.Empty;
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            var user = _customerService.GetCustomerByEmail(customer.Email);
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                message = "User already defined";
-                //AddNotification(NotificationType.RegisterError, message);
+                if (model.UserName != null)
+                    model.UserName = model.UserName.Trim();
 
-                ModelState.AddModelError("", message);
-                return View();
+                var registerationRequst = new CustomerRegistrationRequest(new Customer()
+                {
+                    UserName = model.UserName,
+                    Active = model.Active,
+                    CreatedOn = DateTime.Now,
+                    Deleted = model.Deleted,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber
+                }, model.Email, model.UserName, model.Password, PasswordFormat.Clear, model.Active);
+
+                var registrationResult = _customerRegitrationService.RegisterCustomer(registerationRequst);
+                if (registrationResult.Success)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-
-            if (!_customerRegitrationService.PasswordValidator(customer.Password, customer.ConfirmPassword))
-            {
-                message = "Password doesn't match";
-                //AddNotification(NotificationType.RegisterError, message);
-
-                ModelState.AddModelError("", message);
-                return View();
-            }
-
-            //_customerRepository.Insert(new Customer()
-            //{
-            //    UserName = customer.UserName,
-            //    Active = true,
-            //    CreatedOn = DateTime.Now,
-            //    Deleted = false,
-            //    Email = customer.Email,
-            //    PhoneNumber = customer.PhoneNumber
-            //});
-            message = "User created successfully";
-            //AddNotification(NotificationType.RegisterSuccess, message);
-
-
             return RedirectToAction("Index", "Home");
         }
     }
