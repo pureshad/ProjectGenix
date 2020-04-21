@@ -1,10 +1,9 @@
 ﻿using Genix.Core.Domain.Customers;
-using Genix.Core.Domain.Notification;
 using Genix.Data.Infrastructure;
+using Genix.Services.Infrastructure.Authentication;
 using Genix.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Genix.Web.Controllers
 {
@@ -13,35 +12,21 @@ namespace Genix.Web.Controllers
         //private readonly ILogger<HomeController> _logger;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
+        private readonly IGenixAuthenticationService genixAuthenticationService;
 
-        public HomeController(IRepository<Customer> customerRepository, 
-            IRepository<CustomerRole> customerRoleRepository)
+        public HomeController(IRepository<Customer> customerRepository,
+            IRepository<CustomerRole> customerRoleRepository, IGenixAuthenticationService genixAuthenticationService)
         {
             //_logger = logger;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this.genixAuthenticationService = genixAuthenticationService;
         }
 
         public IActionResult Index()
         {
-            //var users = _customerRepository.Table.ToList();
-            //var users = _customerRoleRepository.Table.ToList();
-            //AddNotification(NotificationType.LoginSuccess, "Redirected to home");
             return View();
         }
-
-        //[HttpPost]
-        //public IActionResult AddUser(UserModel model)
-        //{
-        //    _userRepository.Insert(new User()
-        //    {
-        //        Email = model.Email,
-        //        FirstName = model.FirstName,
-        //        LastName = model.LastName,
-        //        PhoneNumber = model.PhoneNumber
-        //    });
-        //    return Ok();
-        //}
 
         public IActionResult Privacy()
         {

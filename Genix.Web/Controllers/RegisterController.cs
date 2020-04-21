@@ -1,6 +1,5 @@
 ﻿using Genix.Core.Domain.Customers;
 using Genix.Data.Infrastructure;
-using Genix.Services.Infrastructure;
 using Genix.Services.Infrastructure.Customers;
 using Genix.Services.RequestsAndResults;
 using Genix.Web.Models.Customers;

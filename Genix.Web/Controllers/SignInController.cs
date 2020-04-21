@@ -1,4 +1,5 @@
-﻿using Genix.Services.Infrastructure.Customers;
+﻿using Genix.Services.Infrastructure.Authentication;
+using Genix.Services.Infrastructure.Customers;
 using Genix.Web.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +8,16 @@ namespace Genix.Web.Controllers
     public class SignInController : BaseController
     {
         private readonly ICustomerRegitrationService _customerRegitrationService;
+        private readonly IGenixAuthenticationService _authenticationService;
+        private readonly ICustomerService _customerService;
 
-        public SignInController(ICustomerRegitrationService customerRegitrationService)
+        public SignInController(ICustomerRegitrationService customerRegitrationService,
+            IGenixAuthenticationService authenticationService,
+            ICustomerService customerService)
         {
             this._customerRegitrationService = customerRegitrationService;
+            this._authenticationService = authenticationService;
+            this._customerService = customerService;
         }
 
         public IActionResult SignIn()
@@ -30,9 +37,15 @@ namespace Genix.Web.Controllers
             if (ModelState.IsValid)
             {
                 var loginResult = _customerRegitrationService.ValidateCustomer(model.Email, model.Password);
+
+                var customerEmail = _customerService.GetCustomerByEmail(model.Email);
+                var customerUserName = _customerService.GetCustomerByUsername(model.Email);
+
+                var customer = customerEmail ?? customerUserName;
                 switch (loginResult)
                 {
                     case Core.Domain.Customers.CustomerLoginResults.Successful:
+                        _authenticationService.SignIn(customer, model.RememberMe);
                         return RedirectToAction("Index", "Home");
                     case Core.Domain.Customers.CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", "CustomerNotExist");
@@ -60,6 +73,12 @@ namespace Genix.Web.Controllers
 
             //something went wrong
             return View(model);
+        }
+
+        public IActionResult SignOut()
+        {
+            _authenticationService.SignOut();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

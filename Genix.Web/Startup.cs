@@ -3,7 +3,6 @@ using Genix.Web.Dependencies;
 using Genix.Web.Routes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +30,7 @@ namespace Genix.Web
 
             services.RegisterRoutes();
             services.RegisterDependencies();
+            services.AddCookies();
 
             services.AddDbContext<ObjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -52,6 +52,7 @@ namespace Genix.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             dtContext.Database.Migrate();
 

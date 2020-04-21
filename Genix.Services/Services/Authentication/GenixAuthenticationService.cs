@@ -1,8 +1,8 @@
 ﻿using Genix.Core.Domain.Customers;
 using Genix.Services.Infrastructure.Authentication;
 using Genix.Services.Infrastructure.Customers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -43,7 +43,7 @@ namespace Genix.Services.Services.Authentication
                 IsPersistent = isPersistent,
                 IssuedUtc = DateTime.Now
             };
-            
+
             await _httpContextAccessor.HttpContext.SignInAsync(GenixAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperty);
 
             _cachedCustomer = customer;
@@ -54,7 +54,7 @@ namespace Genix.Services.Services.Authentication
             _cachedCustomer = null;
             await _httpContextAccessor.HttpContext.SignOutAsync(GenixAuthenticationDefaults.AuthenticationScheme);
         }
- 
+
         public Customer GetAuthenticatedCustomer()
         {
             throw new NotImplementedException();

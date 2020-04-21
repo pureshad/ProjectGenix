@@ -25,5 +25,16 @@ namespace Genix.Web.Dependencies
 
             return services;
         }
+
+        public static IServiceCollection AddCookies(this IServiceCollection services)
+        {
+            services.AddAuthentication(GenixAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(GenixAuthenticationDefaults.AuthenticationScheme, w =>
+                {
+                    w.LoginPath = "/SignIn/Signin";
+                    w.LogoutPath = "/SignIn/SignOut/";
+                });
+            return services;
+        }
     }
 }

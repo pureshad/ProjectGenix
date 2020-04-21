@@ -107,8 +107,8 @@ namespace Genix.Services.Services.Customers
 
         public CustomerLoginResults ValidateCustomer(string userNameOrEmail, string password)
         {
-            var customer = _customerService.GetCustomerByUsername(userNameOrEmail) == null
-                ? _customerService.GetCustomerByEmail(userNameOrEmail) : null;
+            var customer = _customerService.GetCustomerByUsername(userNameOrEmail) != null
+                ? _customerService.GetCustomerByUsername(userNameOrEmail) : _customerService.GetCustomerByEmail(userNameOrEmail);
 
             if (customer == null)
                 return CustomerLoginResults.CustomerNotExist;
@@ -117,7 +117,7 @@ namespace Genix.Services.Services.Customers
             if (!customer.Active)
                 return CustomerLoginResults.NotActive;
 
-            if(!PasswordMatch(_customerService.GetCurrentPassword(customer.Id), password))
+            if (!PasswordMatch(_customerService.GetCurrentPassword(customer.Id), password))
             {
                 //TODO Fail login attempts
 
