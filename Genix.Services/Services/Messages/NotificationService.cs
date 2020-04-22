@@ -24,9 +24,8 @@ namespace Genix.Services.Services.Messages
             var context = _httpContextAccessor.HttpContext;
             var tempData = _tempDataDictionaryFactory.GetTempData(context);
 
-            //For now some default key ["NotificationList"] for simplicity
-            var messages = tempData.ContainsKey("NotificationList") ?
-                JsonConvert.DeserializeObject<IList<NotifyData>>(tempData["NotificationList"].ToString()) :
+            var messages = tempData.ContainsKey(GenixMessageDefaults.NotificationKey) ?
+                JsonConvert.DeserializeObject<IList<NotifyData>>(tempData[GenixMessageDefaults.NotificationKey].ToString()) :
                 new List<NotifyData>();
 
             messages.Add(new NotifyData()
@@ -36,7 +35,7 @@ namespace Genix.Services.Services.Messages
                 NotifyType = type
             });
 
-            tempData["NotificationList"] = JsonConvert.SerializeObject(messages);
+            tempData[GenixMessageDefaults.NotificationKey] = JsonConvert.SerializeObject(messages);
         }
 
         public void ErrorExceptionNotification(Exception exception, bool logException = true)

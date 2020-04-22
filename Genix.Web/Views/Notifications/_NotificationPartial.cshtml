@@ -1,6 +1,6 @@
 ﻿@{
-    var notes = TempData.ContainsKey("NotificationList") ?
-    JsonConvert.DeserializeObject<IList<NotifyData>>(TempData["NotificationList"].ToString()) :
+    var notes = TempData.ContainsKey(GenixMessageDefaults.NotificationKey) ?
+    JsonConvert.DeserializeObject<IList<NotifyData>>(TempData[GenixMessageDefaults.NotificationKey].ToString()) :
     null;
 
     if (notes != null)
