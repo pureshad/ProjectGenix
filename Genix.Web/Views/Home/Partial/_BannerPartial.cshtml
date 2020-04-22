@@ -1,6 +1,6 @@
 ﻿
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
+    <div class="container-fluid">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Genix</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -35,8 +35,8 @@
                 {
                     <ul class="nav navbar-nav mr-auto">
                         <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="" asp-action="">
-                            <span class="fa fa-user" aria-hidden="true"></span> Hello!  @User.Identity.Name</a>
+                            <a class="nav-link text-dark dropdown-toggle mr-1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="" asp-action="">
+                            <span class="fa fa-user mr-1" aria-hidden="true"></span> Hello!  @User.Identity.Name</a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item"><a class="text-dark" asp-area="" asp-controller="SignIn" asp-action="signIn">SignUp As Diffrent User</a></li>
                                 <li role="separator" class="dropdown-divider"></li>
@@ -45,7 +45,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="SignIn" asp-action="SignOut">
-                            <span class="fas fa-sign-out-alt" aria-hidden="true"></span> Log Out</a>
+                            <span class="fas fa-sign-out-alt mr-1" aria-hidden="true"></span> Log Out</a>
                         </li>
                     </ul>
                 }

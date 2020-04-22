@@ -1,5 +1,6 @@
 ﻿using Genix.Core.Domain.Customers;
 using Genix.Data.Infrastructure;
+using Genix.Services.Infrastructure.Authentication;
 using Genix.Services.Infrastructure.Customers;
 using Genix.Services.Infrastructure.Messages;
 using Genix.Services.RequestsAndResults;
@@ -17,22 +18,28 @@ namespace Genix.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly ILogger<RegisterController> _logger;
         private readonly INotificationService _notificationService;
+        private readonly IGenixAuthenticationService _genixAuthenticationService;
 
         public RegisterController(IRepository<Customer> customerRepository,
             ICustomerRegitrationService customerRegitrationService,
             ICustomerService customerService,
             ILogger<RegisterController> logger,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IGenixAuthenticationService genixAuthenticationService)
         {
             _customerRepository = customerRepository;
             _customerRegitrationService = customerRegitrationService;
             _customerService = customerService;
             this._logger = logger;
             _notificationService = notificationService;
+            _genixAuthenticationService = genixAuthenticationService;
         }
 
         public IActionResult Register()
         {
+            if (_genixAuthenticationService.GetAuthenticatedCustomer() != null)
+                return RedirectToAction("Index", "Home");
+            
             return View();
         }
 

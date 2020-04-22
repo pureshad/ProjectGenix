@@ -57,7 +57,35 @@ namespace Genix.Services.Services.Authentication
 
         public Customer GetAuthenticatedCustomer()
         {
-            throw new NotImplementedException();
+            if (_cachedCustomer != null)
+                return _cachedCustomer;
+
+            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(GenixAuthenticationDefaults.AuthenticationScheme).Result;
+            if (!authenticateResult.Succeeded)
+                return null;
+
+            Customer customer = null;
+            if (_httpContextAccessor.HttpContext.User != null)
+            {
+                var usernameClaim = authenticateResult.Principal.FindFirst(w => w.Type == ClaimTypes.Name
+                        && w.Issuer.Equals(GenixAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                if (usernameClaim != null)
+                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+            }
+            else
+            {
+                var emailClaim = authenticateResult.Principal.FindFirst(w => w.Type == ClaimTypes.Name
+                        && w.Issuer.Equals(GenixAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                if (emailClaim != null)
+                    customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+            }
+
+            if (customer != null || !customer.Active || customer.Deleted)
+                return customer; // TODO return NULL?
+
+            _cachedCustomer = customer;
+
+            return _cachedCustomer;
         }
 
     }

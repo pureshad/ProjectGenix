@@ -37,8 +37,8 @@ namespace Genix.Web.Dependencies
             services.AddAuthentication(GenixAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(GenixAuthenticationDefaults.AuthenticationScheme, w =>
                 {
-                    w.LoginPath = "/SignIn/Signin";
-                    w.LogoutPath = "/SignIn/SignOut/";
+                    w.LoginPath = "/Views/SignIn/SignIn/";
+                    w.LogoutPath = "/Views/SignIn/SignOut/";
                 });
             return services;
         }

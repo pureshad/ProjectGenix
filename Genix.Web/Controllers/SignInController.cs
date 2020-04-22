@@ -31,12 +31,15 @@ namespace Genix.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignIn(LoginModel model)
+        public IActionResult SignIn(LoginModel model, string returnUrl)
         {
             if (model.Email != null)
             {
                 model.Email = model.Email.Trim();
             }
+
+
+            //returnUrl = returnUrl ?? Url.Content("~/");
 
             if (ModelState.IsValid)
             {
@@ -50,7 +53,10 @@ namespace Genix.Web.Controllers
                 {
                     case Core.Domain.Customers.CustomerLoginResults.Successful:
                         _authenticationService.SignIn(customer, model.RememberMe);
-                        return RedirectToAction("Index", "Home");
+                        if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                            return RedirectToAction("Index", "Home");
+
+                        return Redirect(returnUrl);
 
                     case Core.Domain.Customers.CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", "CustomerNotExist");
