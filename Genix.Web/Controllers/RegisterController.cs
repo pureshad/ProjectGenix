@@ -1,6 +1,7 @@
 ﻿using Genix.Core.Domain.Customers;
 using Genix.Data.Infrastructure;
 using Genix.Services.Infrastructure.Customers;
+using Genix.Services.Infrastructure.Messages;
 using Genix.Services.RequestsAndResults;
 using Genix.Web.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,19 @@ namespace Genix.Web.Controllers
         private readonly ICustomerRegitrationService _customerRegitrationService;
         private readonly ICustomerService _customerService;
         private readonly ILogger<RegisterController> _logger;
+        private readonly INotificationService _notificationService;
 
         public RegisterController(IRepository<Customer> customerRepository,
             ICustomerRegitrationService customerRegitrationService,
             ICustomerService customerService,
-            ILogger<RegisterController> logger)
+            ILogger<RegisterController> logger,
+            INotificationService notificationService)
         {
             _customerRepository = customerRepository;
             _customerRegitrationService = customerRegitrationService;
             _customerService = customerService;
             this._logger = logger;
+            _notificationService = notificationService;
         }
 
         public IActionResult Register()
@@ -53,6 +57,7 @@ namespace Genix.Web.Controllers
                 var registrationResult = _customerRegitrationService.RegisterCustomer(registerationRequst);
                 if (registrationResult.Success)
                 {
+                    _notificationService.SuccessNotification("User created successfully");
                     return RedirectToAction("Index", "Home");
                 }
             }
