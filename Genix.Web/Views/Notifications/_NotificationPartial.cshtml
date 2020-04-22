@@ -1,45 +1,41 @@
 ﻿@{
-    var show = false;
-    var _notificationSuccess = string.Empty;
-    var _notificationError = string.Empty;
+    var notes = TempData.ContainsKey("NotificationList") ?
+    JsonConvert.DeserializeObject<IList<NotifyData>>(TempData["NotificationList"].ToString()) :
+    null;
 
-
-    if (ViewData.ContainsKey(nameof(NotificationType.RegisterSuccess)))
+    if (notes != null)
     {
-        _notificationSuccess = ViewData[nameof(NotificationType.RegisterSuccess)] as string;
-    }
+        foreach (var note in notes)
+        {
+            var cssStyle = "";
+            switch (note.NotifyType)
+            {
+                case NotifyType.Success:
+                    cssStyle = "alert-success";
+                    break;
+                case NotifyType.Error:
+                    cssStyle = "alert-danger";
+                    break;
+                case NotifyType.Warning:
+                    cssStyle = "alert-warning";
+                    break;
+            }
+            <div class="alert @cssStyle alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                @if (note.Encode)
+                {
+                    <text>
+                        @note.Message
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        @Html.Raw(note.Message);
+                    </text>
 
-    if (ViewData.ContainsKey(nameof(NotificationType.RegisterError)))
-    {
-        _notificationError = ViewData[nameof(NotificationType.RegisterError)] as string;
+                }
+            </div>
+        }
     }
-
-    //if (ViewData.ContainsKey("LoginSuccess"))
-    //{
-    //    _notification = ViewData["LoginSuccess"] as string;
-    //}
-
-    if (ViewData.ContainsKey(nameof(NotificationType.LoginError)))
-    {
-        _notificationError = ViewData[nameof(NotificationType.LoginError)] as string;
-    }
-    show = !string.IsNullOrWhiteSpace(_notificationSuccess);
 }
-
-
-<div @(Html.Raw(show ? "" : "style=\"display:none;\""))>
-    @if (show)
-    {
-
-        <div class="alert-success">
-            @(_notificationSuccess)
-        </div>
-    }
-    else
-    {
-        <div class="alert-danger">
-            @(_notificationError)
-        </div>
-    }
-
-</div>  

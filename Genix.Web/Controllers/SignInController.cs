@@ -1,5 +1,6 @@
 ﻿using Genix.Services.Infrastructure.Authentication;
 using Genix.Services.Infrastructure.Customers;
+using Genix.Services.Infrastructure.Messages;
 using Genix.Web.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +11,17 @@ namespace Genix.Web.Controllers
         private readonly ICustomerRegitrationService _customerRegitrationService;
         private readonly IGenixAuthenticationService _authenticationService;
         private readonly ICustomerService _customerService;
+        private readonly INotificationService _notificationService;
 
         public SignInController(ICustomerRegitrationService customerRegitrationService,
             IGenixAuthenticationService authenticationService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            INotificationService notificationService)
         {
-            this._customerRegitrationService = customerRegitrationService;
-            this._authenticationService = authenticationService;
-            this._customerService = customerService;
+            _customerRegitrationService = customerRegitrationService;
+            _authenticationService = authenticationService;
+            _customerService = customerService;
+            _notificationService = notificationService;
         }
 
         public IActionResult SignIn()
@@ -47,6 +51,7 @@ namespace Genix.Web.Controllers
                     case Core.Domain.Customers.CustomerLoginResults.Successful:
                         _authenticationService.SignIn(customer, model.RememberMe);
                         return RedirectToAction("Index", "Home");
+
                     case Core.Domain.Customers.CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", "CustomerNotExist");
                         break;
@@ -67,6 +72,7 @@ namespace Genix.Web.Controllers
                         break;
                     default:
                         ModelState.AddModelError("", "Something is wrong");
+                        _notificationService.ErrorNotification("An error accured, please try again");
                         break;
                 }
             }
